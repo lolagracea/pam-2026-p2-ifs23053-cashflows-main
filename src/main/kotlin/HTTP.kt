@@ -1,24 +1,24 @@
 package org.delcom
 
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import org.koin.dsl.module
+import org.koin.ktor.plugin.Koin
+import org.koin.logger.slf4jLogger
 
 fun Application.configureHTTP() {
     install(CORS) {
-        // Izinkan metode standar yang digunakan dalam crud.test.js
         allowMethod(HttpMethod.Options)
-        allowMethod(HttpMethod.Get)    // Tambahkan GET secara eksplisit
-        allowMethod(HttpMethod.Post)   // Tambahkan POST secara eksplisit
-        allowMethod(HttpMethod.Put)    // Dibutuhkan untuk update data
-        allowMethod(HttpMethod.Delete) // Dibutuhkan untuk hapus data
+        allowMethod(HttpMethod.Put)
+        allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
-
-        // Izinkan header yang dibutuhkan untuk pengiriman JSON
         allowHeader(HttpHeaders.Authorization)
-        allowHeader(HttpHeaders.ContentType)
-
-        // Izinkan akses dari host mana pun (Penting untuk lingkungan pengembangan/testing)
-        anyHost()
+        allowHeader("MyCustomHeader")
+        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
     }
 }
